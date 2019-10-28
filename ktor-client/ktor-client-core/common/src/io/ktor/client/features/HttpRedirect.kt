@@ -22,17 +22,19 @@ class HttpRedirect {
         override fun prepare(block: Unit.() -> Unit): HttpRedirect = HttpRedirect()
 
         override fun install(feature: HttpRedirect, scope: HttpClient) {
-            scope.feature(HttpSend)!!.intercept { origin ->
-                handleCall(origin)
+            scope.feature(HttpSend)!!.intercept { context, origin ->
+                handleCall(context, origin)
             }
         }
 
-        private suspend fun Sender.handleCall(origin: HttpClientCall): HttpClientCall {
+        private suspend fun Sender.handleCall(context: HttpRequestBuilder, origin: HttpClientCall): HttpClientCall {
             if (!origin.response.status.isRedirect()) return origin
 
             var call = origin
             while (true) {
                 val location = call.response.headers[HttpHeaders.Location]
+
+                call.close()
 
                 val requestBuilder = HttpRequestBuilder().apply {
                     takeFrom(origin.request)
