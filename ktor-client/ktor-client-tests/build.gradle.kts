@@ -103,6 +103,9 @@ val startTestServer = task<KtorTestServer>("startTestServer") {
 val testTasks = mutableListOf(
     "jvmTest", "jvmBenchmark"
 )
+val projectPrefixes = listOf(
+    "ktor-client:"
+)
 
 if (!ideaActive) {
     testTasks += listOf(
@@ -116,7 +119,7 @@ if (!ideaActive) {
 }
 
 rootProject.allprojects {
-    val tasks = tasks.matching { it.name in testTasks }
+    val tasks = tasks.matching { it.name in testTasks && projectPrefixes.any { prefix -> it.project.path.removePrefix(":").startsWith(prefix) } }
     configure(tasks) {
         dependsOn(startTestServer)
     }
