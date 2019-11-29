@@ -27,7 +27,7 @@ internal class JsWebSocketSession(
     override val closeReason: Deferred<CloseReason?> = _closeReason
 
     init {
-        websocket.binaryType = BinaryType.ARRAYBUFFER
+        websocket.binaryType = "arraybuffer".asDynamic().unsafeCast<BinaryType>() // BinaryType.ARRAYBUFFER
 
         websocket.addEventListener("message", callback = {
             val event = it.unsafeCast<MessageEvent>()

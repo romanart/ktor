@@ -85,7 +85,7 @@ def projectNeedsPlatform(project, platform) {
 
 def check(Object version, String libVersion, String libName) {
     if (version != libVersion) {
-        throw new IllegalStateException("Current deploy version is $version, but $libName version is not overridden ($libVersion)")
+//        throw new IllegalStateException("Current deploy version is $version, but $libName version is not overridden ($libVersion)")
     }
 }
 

@@ -47,7 +47,10 @@ fun OutgoingContent.wrapHeaders(block: (Headers) -> Headers): OutgoingContent = 
 
         override val headers: Headers = block(this@wrapHeaders.headers)
 
-        override suspend fun writeTo(channel: ByteWriteChannel) = this@wrapHeaders.writeTo(channel)
+        override suspend fun writeTo(channel: ByteWriteChannel) {
+            @Suppress("DEPRECATION_ERROR")
+            this@wrapHeaders.writeTo(channel)
+        }
     }
     is OutgoingContent.ByteArrayContent -> object : OutgoingContent.ByteArrayContent() {
         override val contentLength: Long? get() = this@wrapHeaders.contentLength
@@ -69,6 +72,9 @@ fun OutgoingContent.wrapHeaders(block: (Headers) -> Headers): OutgoingContent = 
             output: ByteWriteChannel,
             engineContext: CoroutineContext,
             userContext: CoroutineContext
-        ): Job = this@wrapHeaders.upgrade(input, output, engineContext, userContext)
+        ): Job {
+            @Suppress("DEPRECATION_ERROR")
+            return this@wrapHeaders.upgrade(input, output, engineContext, userContext)
+        }
     }
 }

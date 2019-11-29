@@ -114,6 +114,7 @@ class Logging(
                 is OutgoingContent.WriteChannelContent -> {
                     val textChannel = ByteChannel()
                     GlobalScope.launch(Dispatchers.Unconfined) {
+                        @Suppress("DEPRECATION_ERROR")
                         content.writeTo(textChannel)
                         textChannel.close()
                     }

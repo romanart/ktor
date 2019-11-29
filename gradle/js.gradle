@@ -2,6 +2,9 @@ kotlin {
     js {
         nodejs {
             testTask {
+                useMocha {
+                    timeout = 10000
+                }
                 debug = false
             }
         }
@@ -15,18 +18,20 @@ kotlin {
         }
 
         compilations.main.kotlinOptions {
+            freeCompilerArgs += ['-Xir-produce-klib-dir', '-Xir-only', '-Xir-produce-js', '-Xir-dce']
             metaInfo = true
-            sourceMap = true
+//            sourceMap = true
             moduleKind = 'umd'
             main = 'noCall'
-            sourceMapEmbedSources = 'always'
+//            sourceMapEmbedSources = 'always'
         }
         compilations.test.kotlinOptions {
+            freeCompilerArgs += ['-Xir-only', '-Xir-produce-js', '-Xir-dce']
             metaInfo = true
-            sourceMap = true
+//            sourceMap = true
             moduleKind = 'umd'
             main = 'call'
-            sourceMapEmbedSources = 'always'
+//            sourceMapEmbedSources = 'always'
         }
     }
 
@@ -43,7 +48,7 @@ kotlin {
         }
         jsTest.dependencies {
             api "org.jetbrains.kotlin:kotlin-test-js:$kotlin_version"
-//            api(npm("puppeteer", "*"))
+            api(npm("puppeteer", "*"))
 //            api(npm("source-map-support", source_map_support_version))
             api(npm("node-fetch", node_fetch_version))
             api(npm("ws", ws_version))

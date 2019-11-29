@@ -25,6 +25,7 @@ internal suspend fun HttpRequestData.toRaw(callContext: CoroutineContext): Reque
         is OutgoingContent.ReadChannelContent -> content.readFrom().readRemaining().readBytes()
         is OutgoingContent.WriteChannelContent -> {
             GlobalScope.writer(callContext) {
+                @Suppress("DEPRECATION_ERROR")
                 content.writeTo(channel)
             }.channel.readRemaining().readBytes()
         }
@@ -34,7 +35,7 @@ internal suspend fun HttpRequestData.toRaw(callContext: CoroutineContext): Reque
     return buildObject {
         method = this@toRaw.method.value
         headers = jsHeaders
-        redirect = RequestRedirect.FOLLOW
+        redirect = "follow".unsafeCast<RequestRedirect?>() // RequestRedirect.FOLLOW
 
         bodyBytes?.let { body = Uint8Array(it.toTypedArray()) }
     }

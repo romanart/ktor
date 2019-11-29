@@ -57,12 +57,7 @@ internal class JsClientEngine(override val config: HttpClientEngineConfig) : Htt
         val requestTime = GMTDate()
 
         val urlString = request.url.toString()
-        val socket: WebSocket = if (PlatformUtils.IS_NODE) {
-            val ws = js("require('ws')")
-            js("new ws(urlString)")
-        } else {
-            js("new WebSocket(urlString)")
-        }
+        val socket: WebSocket = createWebSocket(urlString)
 
         try {
             socket.awaitConnection()
@@ -81,6 +76,15 @@ internal class JsClientEngine(override val config: HttpClientEngineConfig) : Htt
             session,
             callContext
         )
+    }
+
+    private fun createWebSocket(urlString_hack_2222222: String): WebSocket {
+        return if (PlatformUtils.IS_NODE) {
+            val ws_hack_33333 = js("require('ws')")
+            js("new ws_hack_33333(urlString_hack_2222222)")
+        } else {
+            js("new WebSocket(urlString_hack_2222222)")
+        }
     }
 
     override fun close() {}
